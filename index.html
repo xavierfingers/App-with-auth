@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <h1> This is a app with authentication.</h1>
+   <title>Demo app with authentication</title>
+ <script type="module">
+import PocketBase from 'https://unpkg.com/pocketbase@0.14.0/dist/pocketbase.es.mjs';
+    const pb = new PocketBase('http://127.0.0.1:8090');
+    // Sign up function
+    async function signup(email, password, name) {
+  try {
+    const user = await pb.collection('users').create({
+      email,
+      password,
+      passwordConfirm: password,
+      name
+    });
+    alert('User signed up!');
+  } catch(e) {
+    if (e.data?.email) {
+      alert('This email is already registered.');
+    } else {
+      console.error(e);
+      alert('Signup failed. Check console.');
+    }
+  }
+}
+    // Login function
+    async function login(email, password) {
+      try {
+        const authData = await pb.collection('users').authWithPassword(email, password);
+        alert('Logged in as ' + authData.model.name);
+        loadTasks();
+      } catch(e) { console.error(e); alert('Login failed'); }
+    }
+
+    // Load user tasks
+    async function loadTasks() {
+      try {
+        const tasks = await pb.collection('tasks').getFullList(200, {
+          filter: `owner="${pb.authStore.model.id}"`
+        });
+        console.log('Tasks:', tasks);
+        const taskList = document.getElementById('tasks');
+        taskList.innerHTML = tasks.map(t => `<li>${t.title} - ${t.completed ? '?' : '?'}</li>`).join('');
+      } catch(e) { console.error(e); }
+    }
+
+    // Add new task
+    async function addTask(title, description) {
+      try {
+        await pb.collection('tasks').create({
+          title,
+          description,
+          owner: pb.authStore.model.id
+        });
+        loadTasks();
+      } catch(e) { console.error(e); }
+    }
+    window.signup = signup;
+    window.login = login; 
+   </script>
+  <ul>   
+  <input id="su-name" placeholder="Username">
+  <input id="su-email" placeholder="Email">
+  <input id="su-pass" placeholder="Password" type="password">
+	<li><button onclick="signup(document.getElementById('su-email').value, document.getElementById('su-pass').value, document.getElementById('su-name').value)">Test Sign up</li></button>
+        <li><button onclick="login(document.getElementById('su-email').value,  document.getElementById('su-pass').value")>Login</button></li> 
+     </ul>
+     <style>
+      body {
+       margin: none;
+       width: none;
+       background-color: grey;
+}
+  </style>
+   </head>
+</html>
