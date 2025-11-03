@@ -20,7 +20,7 @@ import PocketBase from 'https://unpkg.com/pocketbase@0.14.0/dist/pocketbase.es.m
     if (e.data?.email) {
       alert('This email is already registered.');
     } else {
-      console.error(e);
+       console.error(e);
       alert('Signup failed. Check console.');
     }
   }
@@ -58,20 +58,25 @@ import PocketBase from 'https://unpkg.com/pocketbase@0.14.0/dist/pocketbase.es.m
       } catch(e) { console.error(e); }
     }
     window.signup = signup;
-    window.login = login; 
+    window.login = login;
    </script>
-  <ul>   
+  <ul>
   <input id="su-name" placeholder="Username">
   <input id="su-email" placeholder="Email">
   <input id="su-pass" placeholder="Password" type="password">
-	<li><button onclick="signup(document.getElementById('su-email').value, document.getElementById('su-pass').value, document.getElementById('su-name').value)">Test Sign up</li></button>
-        <li><button onclick="login(document.getElementById('su-email').value,  document.getElementById('su-pass').value")>Login</button></li> 
+  <input id="li-pass" placeholder="Login password" type="password">
+  <input id="li-email" placeholder="Login email">
+	<li><button onclick="signup(document.getElementById('su-email').value, document.getElementById('su-pass').value, document.getElementById('su-name').value)">Sign up</li></button>
+        <li><button onclick="login(document.getElementById('su-email').value,  document.getElementById('li-pass').value, document.getElementById('li-email').value)">Login</button></li>
      </ul>
      <style>
       body {
        margin: none;
        width: none;
        background-color: grey;
+       display: flex;
+       justify-content: center;
+       align-items: center;
 }
   </style>
    </head>
