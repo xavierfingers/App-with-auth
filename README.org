@@ -1,0 +1,2 @@
+*** This is a app with basic authentication.
+I am gonna deploy this to GitHub pages.
